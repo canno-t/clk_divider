@@ -20,7 +20,30 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module clk_divider(
-
+module clk_divider#(
+parameter f=1,//wyjsciowa czestotliwosc zegara
+parameter clk_freq = 27000000,//czetotliwosc uzywanego zegara
+parameter cnt = (clk_freq/(2*f))//
+)(
+    input clk,
+    input res,
+    output reg out
     );
+    reg [$clog2(cnt)-1:0] count;
+    
+    always@(posedge clk)begin
+        if(!res)begin
+            out<=0;
+            count<=0;
+        end 
+        else begin
+            if(count==cnt-1)begin
+                count<=0;
+                out<=~out;
+            end 
+            else begin
+                count<=count+1;
+            end
+        end 
+    end 
 endmodule
